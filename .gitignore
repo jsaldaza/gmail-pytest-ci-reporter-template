@@ -1,0 +1,19 @@
+# Entornos virtuales
+.venv/
+venv/
+
+# Archivos de reporte temporales
+reports/*.html
+reports/*.xml
+
+# Archivos de sistema
+.DS_Store
+__pycache__/
+*.pyc
+
+# Archivos de logs
+*.log
+
+# Archivos personales
+src/credentials.json
+token.pickle
