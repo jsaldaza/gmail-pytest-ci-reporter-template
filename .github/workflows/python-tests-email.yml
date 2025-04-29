@@ -1,0 +1,70 @@
+# 📬 CI Pipeline: Pytest + Reporte Gmail
+# Ejecuta tests con Pytest, genera reporte HTML, cobertura (opcional)
+# y envía un correo automático con resultados
+
+name: Python Tests and Gmail Notification
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r src/requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Install Playwright Browsers
+        run: |
+          playwright install --with-deps
+
+      - name: Set environment variables from GitHub Secrets
+        run: |
+          echo "GMAIL_USER=${{ secrets.GMAIL_USER }}" >> $GITHUB_ENV
+          echo "GMAIL_PASSWORD=${{ secrets.GMAIL_PASSWORD }}" >> $GITHUB_ENV
+          echo "TO_EMAIL=${{ secrets.TO_EMAIL }}" >> $GITHUB_ENV
+
+      - name: Run Pytest and Generate HTML Report
+        id: pytest
+        run: |
+          export PYTHONPATH=src
+          pytest \
+            --maxfail=1 \
+            --disable-warnings \
+            --html=reports/report.html \
+            --self-contained-html \
+            --cov=src \
+            --cov-report=term \
+            --cov-report=xml:reports/coverage.xml \
+            -v
+        continue-on-error: true
+
+      - name: Set Pytest status for Email
+        if: always()
+        run: |
+          if [ "${{ steps.pytest.outcome }}" == "success" ]; then
+            echo "PYTEST_STATUS=success" >> $GITHUB_ENV
+          else
+            echo "PYTEST_STATUS=failure" >> $GITHUB_ENV
+          fi
+
+      - name: Send Test Report via Gmail
+        if: always()
+        run: |
+          export PYTHONPATH=src
+          python src/send_test_email.py
