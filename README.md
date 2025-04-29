@@ -25,31 +25,21 @@
 
 ```
 gmail-pytest-ci-reporter-template/
-├── .github/workflows/            # GitHub Actions CI workflow
-│   └── python-tests-email.yml    # Flujo de test + notificación
+├── .github/workflows/
+│   └── python-tests-email.yml       # CI/CD completo con Pytest + correo Gmail
 ├── src/
-│   ├── tests/                    # Tests con Pytest (incluye test dummy)
-│   └── send_test_email.py        # Script que genera y envía el correo
-├── reports/                      # Reportes generados por pytest
-├── assets/                       # Imagen de preview del correo (opcional)
+│   ├── send_test_email.py           # Script de envío con resumen HTML
+│   └── tests/
+│       └── test_dummy.py            # Test de ejemplo
+├── reports/                         # Aquí se guarda el reporte HTML generado
+├── assets/
+│   └── email-preview.png            # Imagen ejemplo del correo enviado
 ├── .gitignore
-├── pytest.ini                    # Configuraciones de Pytest
+├── pytest.ini                       # Configuración base de Pytest
 ├── requirements.txt
 ├── requirements-dev.txt
-└── README.md                     # Este archivo
+└── README.md
 ```
-
----
-
-## 🧪 Qué hace esta plantilla
-
-- Ejecuta tus tests automáticamente en cada push a `main`
-- Genera un reporte HTML + cobertura de código
-- Envía un correo estilizado con:
-  - ✅ Resultado del test
-  - 📈 Cobertura (si está disponible)
-  - 📎 Reporte en HTML como archivo adjunto
-  - 🔗 Enlace al pipeline de GitHub Actions
 
 ---
 
@@ -67,6 +57,25 @@ gmail-pytest-ci-reporter-template/
 
 ---
 
+## 🧪 ¿Cómo convertir esta plantilla en un proyecto real?
+
+> Esta plantilla es solo el punto de partida. Puedes usarla como base para automatizar cualquier proyecto con tests.
+
+### 🧩 Opción 1: Tienes un nuevo proyecto desde cero
+1. Haz `Use this template`
+2. Escribe tus tests reales dentro de `src/tests/`
+3. Ejecuta tus pruebas normalmente. Los correos se enviarán automáticamente
+
+### 🔁 Opción 2: Tienes un proyecto ya existente
+1. Crea un nuevo repo desde esta plantilla
+2. Copia tus archivos de pruebas dentro de `src/`
+3. Ajusta el `python-tests-email.yml` si es necesario (por ejemplo, para rutas personalizadas)
+4. Empieza a trabajar con CI listo
+
+✅ El flujo ya está preparado para usar Pytest, generar reportes HTML, cobertura y enviar emails automáticamente sin tener que configurar desde cero cada vez.
+
+---
+
 ## 📬 Resultado del Correo
 
 Ejemplo real generado por esta plantilla:
@@ -75,25 +84,32 @@ Ejemplo real generado por esta plantilla:
 
 ---
 
-## 💡 Extras incluidos
+## 📌 Tips para extender esta plantilla
 
-- `send_test_email.py` puede ser usado desde GitHub Actions o localmente
-- Pytest con configuración de cobertura (`pytest-cov`)
-- Soporte para `pytest-html` con adjuntos
-- Permite ejecución local para pruebas manuales
-- Visual y profesional desde el primer uso
+- Integra **Slack o Discord** con Webhooks si quieres alertas en canales
+- Personaliza el diseño del correo HTML para que se ajuste a tu equipo o branding
+- Cambia el workflow para que también envíe correos solo en `failures`, si así lo prefieres
+- Publica esta plantilla en [Dev.to](https://dev.to), [Hashnode](https://hashnode.com) o [LinkedIn](https://linkedin.com)
+
+---
+
+## 🧰 Comandos útiles para trabajar localmente
+
+```bash
+# Ejecutar tests manualmente
+pytest
+
+# Ejecutar con reporte HTML local
+pytest --html=reports/report.html --self-contained-html -v
+
+# Validar formato o correr pre-commit (si usas)
+pre-commit run --all-files
+```
 
 ---
 
 ## 👨‍💻 Autor
 **Juan Andrés Saldarriaga Z.**  
 _Software QA Engineer | Automatizador PRO | Sharing knowledge through templates_
-
----
-
-> ¿Quieres integrarlo con Slack, Notion o dashboards visuales?  
-> Esta plantilla es tu punto de partida para automatización real en proyectos reales.
-
-> _“La excelencia está en los detalles.”_
 
 ---
